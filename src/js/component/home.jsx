@@ -9,11 +9,16 @@ const Home = () => {
 	const [tareas,setTareas] = useState([]);
 	useEffect(() => {
 		fetch("https://assets.breatheco.de/apis/fake/todos/user/jaranedag")
-  .then(response => response.json())
-  .then(result => setTareas(result))
-  .catch(error => console.log('error', error));
-						
-	},[])
+			.then(response => response.json())
+			.then(result => {
+				if (Array.isArray(result)) {
+					setTareas(result);
+				} else if (typeof result === "object") {
+					setTareas(Object.values(result));
+				}
+			})
+			.catch(error => console.log('error', error));
+	}, []);
      function actualizar (){
 		var myHeaders = new Headers();
 myHeaders.append("Content-Type", "application/json");
@@ -63,6 +68,7 @@ fetch("https://assets.breatheco.de/apis/fake/todos/user/jaranedag", requestOptio
 				<div className="footer text-center ">{tareas.length} Tareas</div>
 		   </div>
 	);
+	
 };
 
 export default Home;
