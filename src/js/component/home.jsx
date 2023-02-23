@@ -5,25 +5,44 @@ import React, { useState, useEffect } from "react";
 import rigoImage from "../../img/rigo-baby.jpg";
 
 
-
+// He intentado que se borran todas las tareas pero parece que la API tiene un problema, porque no deja tener la lista vacia y obliga a tener una tarea guardada, pero si borras y agregas tareas igualmente funciona
 
 const Todo = () =>{
 	const [tareas,setTarea] = useState ([]);
 	const borrarTarea = (i) => {
-		setTarea(
+		setTarea(			
 			tareas.filter((value,index)=>{
 				return index !== i;
 			})
+        
 		);
+		if (tareas.length === 1){
+			console.log("hola")
+		    deleteApi()
+		  }
+	
 	};
-
+function deleteApi(){
+	var myHeaders = new Headers();
+	        myHeaders.append("Content-Type", "application/json");
+			var requestOptions = {
+				method: "PUT",
+				headers: myHeaders,
+				body: JSON.stringify([{"label":"","done":false}]),
+				redirect: "follow",
+			};
+			fetch("https://assets.breatheco.de/apis/fake/todos/user/jaranedag",requestOptions)
+			.then((response) => response.json())
+			.then((result) => console.log(result))
+			.catch((error) => console.log("error", error));
+}
 
 function putApi(){
 	var myHeaders = new Headers();
 	myHeaders.append("Content-Type", "application/json");
 
 	var raw = JSON.stringify(tareas);
-
+	console.log(raw)
 	var requestOptions = {
 		method: "PUT",
 		headers: myHeaders,
